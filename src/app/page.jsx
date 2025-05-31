@@ -1,10 +1,10 @@
-import React from "react";
+import DosComponent from "@/lib/views/Index";
 
 const Home = () => {
 	return (
-		<div>
-			<div></div>
-		</div>
+		<>
+			<DosComponent />
+		</>
 	);
 };
 

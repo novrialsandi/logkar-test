@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// import { iconSvg } from "../Icons/icon";
+import { MdClose } from "react-icons/md";
 
 const Modal = ({
 	position = "center",
@@ -126,7 +126,7 @@ const Modal = ({
 							className="absolute right-4 top-4 rounded-lg  transition-all duration-100 cursor-pointer"
 							onClick={() => onClose(false)}
 						>
-							{/* {iconSvg.closeSvg} */}x
+							<MdClose className="text-2xl" />
 						</button>
 
 						{children}

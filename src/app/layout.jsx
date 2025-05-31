@@ -1,5 +1,4 @@
 import "./globals.css";
-import Layout from "@/lib/layout/Index";
 
 export const metadata = {
 	title: "Create Next App",
@@ -9,9 +8,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
 	return (
 		<html lang="en">
-			<body className={`antialiased`}>
-				<Layout>{children}</Layout>
-			</body>
+			<body className={`antialiased`}>{children}</body>
 		</html>
 	);
 }

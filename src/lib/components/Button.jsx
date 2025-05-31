@@ -23,7 +23,7 @@ const Button = ({
 
 	return (
 		<button
-			className={`min-w-24 ${className}  ${sizeDataClass[size]} text-secondary bg-primary hover:bg-[#58585a]
+			className={`min-w-24 ${className}  ${sizeDataClass[size]} text-green-700 font-semibold bg-green-100 rounded-md
 			}  text-nowrap flex items-center justify-center cursor-pointer`}
 			disabled={disabled || isLoading}
 			onClick={handleClick}
