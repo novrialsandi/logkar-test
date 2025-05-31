@@ -11,6 +11,7 @@ import {
 	MdEventAvailable,
 	MdLocalShipping,
 	MdLocationOn,
+	MdSearch,
 } from "react-icons/md";
 import Button from "../components/Button";
 import ModalAction from "./ModalAction";
@@ -102,8 +103,13 @@ const Filter = () => {
 						type="search"
 						placeholder="Cari berdasarkan nama barang"
 						size="small"
+						hasIconLeft={<MdSearch />}
 						width="w-[400px]"
 						debounceTime={1000}
+						// value={search}
+						// onChange={(e) => {
+						// setSearch(e.target.value);
+						// }}
 					/>
 					<Button size="small" onClick={() => setOpenModal(true)}>
 						Filter

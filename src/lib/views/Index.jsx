@@ -3,6 +3,8 @@
 import { useOrderStore, useLoadingStore } from "../stores";
 import moment from "moment";
 import Filter from "./Filter";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css"; // Optional: default styling
 
 const DosComponent = () => {
 	const { order } = useOrderStore();
@@ -23,6 +25,7 @@ const DosComponent = () => {
 		{ label: "Status", key: "status" },
 		{ label: "Referensi", key: "ref_no" },
 		{ label: "Updated Date", key: "updated_at" },
+		// { label: "", key: "" },
 	];
 
 	return (
@@ -36,7 +39,7 @@ const DosComponent = () => {
 								{columns.map((col) => (
 									<th
 										key={col.key}
-										className="text-center py-6 p-2 border border-[#cccccc]"
+										className="text-center py-6 p-2 text-ellipsis text-nowrap border border-[#cccccc]"
 									>
 										{col.label}
 									</th>
@@ -59,11 +62,21 @@ const DosComponent = () => {
 										{columns.map((col) => (
 											<td
 												key={col.key}
-												className="p-2 border py-4 border-[#cccccc] text-center"
+												className="p-2 border text-ellipsis text-nowrap py-4 border-[#cccccc] text-center max-w-[200px] overflow-hidden"
 											>
-												{col.key === "updated_at"
-													? moment(item[col.key]).format("YYYY-MM-DD HH:mm")
-													: item[col.key] ?? "-"}
+												<Tippy
+													content={
+														col.key === "updated_at"
+															? moment(item[col.key]).format("YYYY-MM-DD HH:mm")
+															: item[col.key] ?? "-"
+													}
+												>
+													<span>
+														{col.key === "updated_at"
+															? moment(item[col.key]).format("YYYY-MM-DD HH:mm")
+															: item[col.key] ?? "-"}
+													</span>
+												</Tippy>
 											</td>
 										))}
 									</tr>
