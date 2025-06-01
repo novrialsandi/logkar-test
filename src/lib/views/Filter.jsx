@@ -17,7 +17,7 @@ import Button from "../components/Button";
 import ModalAction from "./ModalAction";
 
 const Filter = () => {
-	const { setOrder } = useOrderStore();
+	const { order, setOrder } = useOrderStore();
 	const { filter, setFilter } = useFilterStore();
 
 	const [openModal, setOpenModal] = useState(false);
@@ -38,10 +38,12 @@ const Filter = () => {
 			page = filter.page
 		) => {
 			try {
-				setFilter((prev) => ({
-					...prev,
-					isLoading: true,
-				}));
+				if (!filter.isEnter) {
+					setFilter((prev) => ({
+						...prev,
+						isLoading: true,
+					}));
+				}
 
 				const payload = {
 					filter: {
@@ -67,7 +69,19 @@ const Filter = () => {
 					});
 
 					setMenus(updatedMenus);
-					setOrder(res.data.order_list);
+
+					if (filter.isEnter) {
+						if (res.data.order_list.length === 0) {
+							setFilter((prev) => ({
+								...prev,
+								isEndData: true,
+							}));
+						} else {
+							setOrder([...order, ...res.data.order_list]);
+						}
+					} else {
+						setOrder(res.data.order_list);
+					}
 				}
 			} catch (error) {
 				console.error("Error fetching DOs:", error);
@@ -75,6 +89,8 @@ const Filter = () => {
 				setFilter((prev) => ({
 					...prev,
 					isLoading: false,
+					isEnter: false,
+					isLoadingPage: false,
 				}));
 			}
 		},
@@ -82,14 +98,22 @@ const Filter = () => {
 	);
 
 	// Handle tab changes
-	const handleTabChange = async (status) => {
-		await setFilter({
+	const handleTabChange = (status) => {
+		setOrder([]);
+		console.log(filter.search);
+
+		setFilter((prev) => ({
+			...prev,
 			activeTab: status,
 			search: "",
 			origin: [],
 			destination: [],
 			page: 1,
-		});
+			isEnter: false,
+			isLoadingPage: false,
+			isEndData: false,
+			isLoading: true,
+		}));
 
 		getDatas(status, "", [], [], 1);
 
@@ -101,13 +125,34 @@ const Filter = () => {
 	// Handle search input changes
 	const handleSearchChange = (e) => {
 		const newSearchValue = e.target.value;
+
 		setFilter((prev) => ({
 			...prev,
 			search: newSearchValue,
+			isEndData: false,
+			page: 1,
 		}));
 
-		getDatas(filter.activeTab, newSearchValue);
+		getDatas(
+			filter.activeTab,
+			newSearchValue,
+			filter.origin,
+			filter.destination,
+			1
+		);
 	};
+
+	useEffect(() => {
+		if (filter.isEnter) {
+			getDatas(
+				filter.activeTab,
+				filter.search,
+				filter.origin,
+				filter.destination,
+				filter.page
+			);
+		}
+	}, [filter.isEnter]);
 
 	useEffect(() => {
 		getDatas();
@@ -141,6 +186,7 @@ const Filter = () => {
 				</div>
 				<div className="flex px-8 pt-8 gap-4">
 					<TextInput
+						key={filter.activeTab}
 						type="search"
 						placeholder="Cari berdasarkan nama barang"
 						size="small"

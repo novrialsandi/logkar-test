@@ -19,7 +19,9 @@ export const useFilterStore = create((set) => ({
 		destination: [],
 		page: 1,
 		isEnter: false,
+		isLoadingPage: false,
 		isLoading: true,
+		isEndData: false,
 	},
 	setFilter: (filterDataOrUpdater) =>
 		set((state) => ({

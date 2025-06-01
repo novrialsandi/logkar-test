@@ -11,17 +11,39 @@ import { columns } from "../constant/tableColumns";
 
 const DosComponent = () => {
 	const { order } = useOrderStore();
-	const { filter } = useFilterStore();
+	const { filter, setFilter } = useFilterStore();
 	const [activeMenuRowIndex, setActiveMenuRowIndex] = useState(null);
+
+	const handleScroll = (e) => {
+		const { scrollTop, scrollHeight, clientHeight } = e.target;
+
+		if (
+			scrollTop + clientHeight >= scrollHeight - 50 &&
+			!filter.isLoadingPage &&
+			!filter.isLoading &&
+			!filter.isEndData
+		) {
+			setFilter((prev) => ({
+				...prev,
+				isEnter: true,
+				isLoadingPage: true,
+				page: prev.page + 1,
+			}));
+		}
+	};
 
 	return (
 		<div className="w-full  p-20">
 			<div className="border">
 				<Filter />
-				<div className="p-8 overflow-x-auto">
-					<table className="w-full border-collapse border border-[#cccccc] text-sm">
-						<thead>
-							<tr className="bg-gray-100">
+				<div
+					id="table-wrapper"
+					className="m-8 overflow-y-auto h-[600px]"
+					onScroll={handleScroll}
+				>
+					<table className="w-full relative  border-collapse border border-[#cccccc] text-sm">
+						<thead className="sticky top-0 z-0   bg-white">
+							<tr className="bg-gray-100 ">
 								{columns.map((col) => (
 									<th
 										key={col.key}
@@ -114,6 +136,16 @@ const DosComponent = () => {
 										className="text-center py-10 text-gray-400"
 									>
 										Tidak ada data ditemukan.
+									</td>
+								</tr>
+							)}
+							{filter.isLoadingPage && (
+								<tr>
+									<td
+										colSpan={columns.length}
+										className="text-center py-10 text-gray-500"
+									>
+										Loading data...
 									</td>
 								</tr>
 							)}
