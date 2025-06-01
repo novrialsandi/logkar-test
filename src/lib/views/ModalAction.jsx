@@ -24,7 +24,6 @@ const ModalAction = ({ openModal, setOpenModal, getDatas }) => {
 			originTemporary: [],
 			destinationTemporary: [],
 		});
-		// setFilter((prev) => ({ ...prev, origin: [], destination: [] }));
 	};
 
 	const handleApply = () => {
@@ -107,7 +106,7 @@ const ModalAction = ({ openModal, setOpenModal, getDatas }) => {
 					)}
 				</div>
 
-				<div className="space-y-4">
+				<div className="">
 					<div className="mt-4">
 						<h4 className="font-semibold mb-2">Selected Origin</h4>
 						<div className="flex flex-wrap gap-2 mb-4">
@@ -148,13 +147,8 @@ const ModalAction = ({ openModal, setOpenModal, getDatas }) => {
 
 					{/* Action Buttons */}
 					<div className="border-t flex justify-end gap-4 p-2">
-						<button
-							className="text-gray-500 hover:underline"
-							onClick={handleReset}
-						>
-							Reset
-						</button>
-						<Button size="small" onClick={handleApply}>
+						<button className="text-gray-500 hover:underline">Reset</button>
+						<Button size="small" className="">
 							Terapkan
 						</Button>
 					</div>

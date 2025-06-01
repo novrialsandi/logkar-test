@@ -8,3 +8,16 @@
 	-ms-overflow-style: none;
 	scrollbar-width: none;
 }
+
+.tippy-box[data-theme~="custom-white"] {
+	background-color: white;
+	border: 1px solid #e5e7eb;
+	border-radius: 6px;
+	color: black;
+	box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tippy-box[data-theme~="custom-white"] > .tippy-arrow::before {
+	color: white;
+	box-sizing: border-box;
+}

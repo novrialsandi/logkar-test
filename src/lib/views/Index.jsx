@@ -5,7 +5,6 @@ import moment from "moment";
 import Filter from "./Filter";
 import { MdMoreVert } from "react-icons/md";
 import Tippy from "@tippyjs/react";
-import "tippy.js/dist/tippy.css"; // Optional: default styling
 import { useState } from "react";
 import { columns } from "../const/tableColumns";
 
@@ -74,6 +73,7 @@ const DosComponent = () => {
 											>
 												{/* Tippy untuk tooltip umum */}
 												<Tippy
+													theme="custom-white"
 													content={
 														col.key === "updated_at"
 															? moment(item[col.key]).format("YYYY-MM-DD HH:mm")
@@ -88,6 +88,7 @@ const DosComponent = () => {
 															moment(item[col.key]).format("YYYY-MM-DD HH:mm")
 														) : col.key === "" ? (
 															<Tippy
+																theme="custom-white"
 																visible={activeMenuRowIndex === rowIndex}
 																interactive={true}
 																placement="bottom-end"
