@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../components/Modal";
 import Dropdown from "../components/Dropdown";
 import Button from "../components/Button";
@@ -10,8 +10,8 @@ const ModalAction = ({ openModal, setOpenModal, getDatas }) => {
 	const { filter, setFilter } = useFilterStore();
 
 	const [temp, setTemp] = useState({
-		originTemporary: [],
-		destinationTemporary: [],
+		originTemporary: filter.origin,
+		destinationTemporary: filter.destination,
 	});
 
 	const findLabel = (options, value) => {
@@ -32,22 +32,29 @@ const ModalAction = ({ openModal, setOpenModal, getDatas }) => {
 			origin: temp.originTemporary,
 			destination: temp.destinationTemporary,
 			isEndData: false,
-
 			page: 1,
 		}));
+
 		getDatas(
 			filter.activeTab,
 			filter.search,
-			filter.origin,
-			filter.destination,
+			temp.originTemporary,
+			temp.destinationTemporary,
 			1
 		);
 		setOpenModal(false);
 	};
 
+	useEffect(() => {
+		setTemp({
+			originTemporary: [],
+			destinationTemporary: [],
+		});
+	}, [filter.activeTab]);
+
 	return (
-		<Modal visible={openModal} preventClose onClose={() => setOpenModal(false)}>
-			<div className="p-4 min-h-[450px] h-full flex flex-col justify-between">
+		<Modal visible={openModal} onClose={() => setOpenModal(false)}>
+			<div className="p-4 min-h-[500px] h-full flex flex-col justify-between">
 				<div className="flex flex-col gap-4">
 					{/* Tabs */}
 					<div className="flex gap-4">
@@ -79,9 +86,7 @@ const ModalAction = ({ openModal, setOpenModal, getDatas }) => {
 								type="multi"
 								items={originOptions}
 								defaultValue={
-									filter.origin.length > 0
-										? filter.origin
-										: temp.originTemporary
+									temp.originTemporary.length > 0 ? temp.originTemporary : []
 								}
 								onStateChange={(e) =>
 									setTemp((prev) => ({ ...prev, originTemporary: e }))
@@ -94,9 +99,9 @@ const ModalAction = ({ openModal, setOpenModal, getDatas }) => {
 								type="multi"
 								items={destionationOptions}
 								defaultValue={
-									filter.destination.length > 0
-										? filter.destination
-										: temp.destinationTemporary
+									temp.destinationTemporary.length > 0
+										? temp.destinationTemporary
+										: []
 								}
 								onStateChange={(e) =>
 									setTemp((prev) => ({ ...prev, destinationTemporary: e }))
@@ -106,7 +111,7 @@ const ModalAction = ({ openModal, setOpenModal, getDatas }) => {
 					)}
 				</div>
 
-				<div className="">
+				<div className="space-y-4">
 					<div className="mt-4">
 						<h4 className="font-semibold mb-2">Selected Origin</h4>
 						<div className="flex flex-wrap gap-2 mb-4">
@@ -147,8 +152,13 @@ const ModalAction = ({ openModal, setOpenModal, getDatas }) => {
 
 					{/* Action Buttons */}
 					<div className="border-t flex justify-end gap-4 p-2">
-						<button className="text-gray-500 hover:underline">Reset</button>
-						<Button size="small" className="">
+						<button
+							className="text-gray-500 hover:underline"
+							onClick={handleReset}
+						>
+							Reset
+						</button>
+						<Button size="small" className="" onClick={handleApply}>
 							Terapkan
 						</Button>
 					</div>

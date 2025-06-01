@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import fetchApi from "../api/fetchApi";
-import { useOrderStore, useLoadingStore, useFilterStore } from "../stores";
+import { useOrderStore, useFilterStore } from "../stores";
 import TextInput from "../components/TextInput";
 
 import {
@@ -15,6 +15,7 @@ import {
 } from "react-icons/md";
 import Button from "../components/Button";
 import ModalAction from "./ModalAction";
+import { destionationOptions, originOptions } from "../const/tableColumns";
 
 const Filter = () => {
 	const { order, setOrder } = useOrderStore();
@@ -28,6 +29,11 @@ const Filter = () => {
 		{ label: "Dalam Pengiriman", order_status: 3, icon: <MdLocalShipping /> },
 		{ label: "Tiba Di Muat", order_status: 4, icon: <MdLocationOn /> },
 	]);
+
+	const findLabel = (options, value) => {
+		const found = options.find((opt) => opt.value === value);
+		return found ? found.label : value;
+	};
 
 	const getDatas = useCallback(
 		async (
@@ -99,9 +105,6 @@ const Filter = () => {
 
 	// Handle tab changes
 	const handleTabChange = (status) => {
-		setOrder([]);
-		console.log(filter.search);
-
 		setFilter((prev) => ({
 			...prev,
 			activeTab: status,
@@ -200,9 +203,41 @@ const Filter = () => {
 						value={filter.search}
 						onChange={handleSearchChange}
 					/>
-					<Button size="small" onClick={() => setOpenModal(true)}>
-						Filter
-					</Button>
+					<div className="flex gap-4">
+						<Button size="small" onClick={() => setOpenModal(true)}>
+							Filter
+						</Button>
+						{filter.origin.length > 0 && (
+							<div>
+								<div className="flex gap-2 items-center">
+									<div>Origin:</div>
+									{filter.origin.map((value) => (
+										<span
+											key={value}
+											className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm"
+										>
+											{findLabel(originOptions, value)}
+										</span>
+									))}
+								</div>
+							</div>
+						)}
+						{filter.destination.length > 0 && (
+							<div>
+								<div className="flex gap-2 items-center">
+									<div>Destination:</div>
+									{filter.destination.map((value) => (
+										<span
+											key={value}
+											className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
+										>
+											{findLabel(destionationOptions, value)}
+										</span>
+									))}
+								</div>
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
 		</>
