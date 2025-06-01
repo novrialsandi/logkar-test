@@ -5,7 +5,7 @@ import moment from "moment";
 import Filter from "./Filter";
 import { MdMoreVert } from "react-icons/md";
 import Tippy from "@tippyjs/react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import "tippy.js/dist/tippy.css";
 import { columns } from "../const/tableColumns";
 import "tippy.js/themes/light.css";
@@ -14,6 +14,7 @@ const DosComponent = () => {
 	const { order } = useOrderStore();
 	const { filter, setFilter } = useFilterStore();
 	const [activeMenuRowIndex, setActiveMenuRowIndex] = useState(null);
+	const tableWrapperRef = useRef(null);
 
 	const handleScroll = (e) => {
 		const { scrollTop, scrollHeight, clientHeight } = e.target;
@@ -33,12 +34,20 @@ const DosComponent = () => {
 		}
 	};
 
+	useEffect(() => {
+		if (filter.isLoadingPage && tableWrapperRef.current) {
+			const wrapper = tableWrapperRef.current;
+			wrapper.scrollTo({ top: wrapper.scrollHeight, behavior: "smooth" });
+		}
+	}, [filter.isLoadingPage]);
+
 	return (
 		<div className="w-full  p-20">
 			<div className="border">
 				<Filter />
 				<div
 					id="table-wrapper"
+					ref={tableWrapperRef}
 					className="m-8 overflow-y-auto h-[600px]"
 					onScroll={handleScroll}
 				>
@@ -60,9 +69,11 @@ const DosComponent = () => {
 								<tr>
 									<td
 										colSpan={columns.length}
-										className="text-center py-10 text-gray-500"
+										className="text-center py-4 text-gray-500"
 									>
-										Loading data...
+										<div className="flex justify-center items-center">
+											<div className="w-6 h-6 border-4 border-gray-300 border-t-gray-500 rounded-full animate-spin"></div>
+										</div>
 									</td>
 								</tr>
 							) : order.length > 0 ? (
@@ -146,9 +157,11 @@ const DosComponent = () => {
 								<tr>
 									<td
 										colSpan={columns.length}
-										className="text-center py-10 text-gray-500"
+										className="text-center py-4 text-gray-500"
 									>
-										Loading data...
+										<div className="flex justify-center items-center">
+											<div className="w-6 h-6 border-4 border-gray-300 border-t-gray-500 rounded-full animate-spin"></div>
+										</div>
 									</td>
 								</tr>
 							)}

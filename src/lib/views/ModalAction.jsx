@@ -19,6 +19,17 @@ const ModalAction = ({ openModal, setOpenModal, getDatas }) => {
 		return found ? found.label : value;
 	};
 
+	const isEqualArray = (a, b) =>
+		Array.isArray(a) &&
+		Array.isArray(b) &&
+		a.length === b.length &&
+		a.every((val) => b.includes(val));
+
+	const isFilterChanged = !(
+		isEqualArray(temp.originTemporary, filter.origin) &&
+		isEqualArray(temp.destinationTemporary, filter.destination)
+	);
+
 	const handleReset = () => {
 		setTemp({
 			originTemporary: [],
@@ -167,7 +178,14 @@ const ModalAction = ({ openModal, setOpenModal, getDatas }) => {
 						>
 							Reset
 						</button>
-						<Button size="small" className="" onClick={handleApply}>
+						<Button
+							size="small"
+							disabled={!isFilterChanged}
+							className={
+								!isFilterChanged ? "opacity-50 cursor-not-allowed" : ""
+							}
+							onClick={handleApply}
+						>
 							Terapkan
 						</Button>
 					</div>
