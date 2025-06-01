@@ -11,13 +11,21 @@ export const useOrderStore = create((set) => ({
 		})),
 }));
 
-export const useLoadingStore = create((set) => ({
-	loading: true,
-	setLoading: (loadingDataOrUpdater) =>
+export const useFilterStore = create((set) => ({
+	filter: {
+		activeTab: 0,
+		search: "",
+		origin: [],
+		destination: [],
+		page: 1,
+		isEnter: false,
+		isLoading: true,
+	},
+	setFilter: (filterDataOrUpdater) =>
 		set((state) => ({
-			loading:
-				typeof loadingDataOrUpdater === "function"
-					? loadingDataOrUpdater(state.loading)
-					: loadingDataOrUpdater,
+			filter:
+				typeof filterDataOrUpdater === "function"
+					? filterDataOrUpdater(state.filter)
+					: filterDataOrUpdater,
 		})),
 }));

@@ -1,35 +1,18 @@
 "use client";
 
-import { useOrderStore, useLoadingStore } from "../stores";
+import { useOrderStore, useFilterStore } from "../stores";
 import moment from "moment";
 import Filter from "./Filter";
 import { MdMoreVert } from "react-icons/md";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // Optional: default styling
 import { useState } from "react";
+import { columns } from "../constant/tableColumns";
 
 const DosComponent = () => {
 	const { order } = useOrderStore();
-	const { loading } = useLoadingStore();
+	const { filter } = useFilterStore();
 	const [activeMenuRowIndex, setActiveMenuRowIndex] = useState(null);
-
-	const columns = [
-		{ label: "Do/No", key: "do_no" },
-		{ label: "Do/Id", key: "do_id" },
-		{ label: "Goods", key: "goods_name" },
-		{ label: "Quantity", key: "goods_qty" },
-		{ label: "Unit", key: "goods_unit" },
-		{ label: "Goods in Ton", key: "goods_qty_ton" },
-		{ label: "Order Type", key: "order_type" },
-		{ label: "Order Type Name", key: "order_type_name" },
-		{ label: "Origin", key: "origin_name" },
-		{ label: "Destination", key: "destination_name" },
-		{ label: "Destination Address", key: "destination_address" },
-		{ label: "Status", key: "status" },
-		{ label: "Referensi", key: "ref_no" },
-		{ label: "Updated Date", key: "updated_at" },
-		{ label: "", key: "" },
-	];
 
 	return (
 		<div className="w-full  p-20">
@@ -50,7 +33,7 @@ const DosComponent = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{loading ? (
+							{filter.isLoading ? (
 								<tr>
 									<td
 										colSpan={columns.length}

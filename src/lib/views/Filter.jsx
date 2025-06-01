@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import fetchApi from "../api/fetchApi";
-import { useOrderStore, useLoadingStore } from "../stores";
+import { useOrderStore, useLoadingStore, useFilterStore } from "../stores";
 import TextInput from "../components/TextInput";
 
 import {
@@ -18,9 +18,8 @@ import ModalAction from "./ModalAction";
 
 const Filter = () => {
 	const { setOrder } = useOrderStore();
-	const { setLoading } = useLoadingStore();
+	const { filter, setFilter } = useFilterStore();
 
-	const [activeTab, setActiveTab] = useState(0);
 	const [openModal, setOpenModal] = useState(false);
 	const [menus, setMenus] = useState([
 		{ label: "Semua Do", order_status: 0, icon: <MdList /> },
@@ -30,47 +29,89 @@ const Filter = () => {
 		{ label: "Tiba Di Muat", order_status: 4, icon: <MdLocationOn /> },
 	]);
 
-	const getDatas = async (status) => {
-		try {
-			setLoading(true);
-			const res = await fetchApi.post("/orders", {
-				keyword: "",
-				filter: {
-					order_status: [status],
-					origin_code: [],
-					destination_code: [],
-				},
-				page: 1,
-			});
+	const getDatas = useCallback(
+		async (
+			status = filter.activeTab,
+			keyword = filter.search,
+			origin_code = filter.origin,
+			destination_code = filter.destination,
+			page = filter.page
+		) => {
+			try {
+				setFilter((prev) => ({
+					...prev,
+					isLoading: true,
+				}));
 
-			if (res.status === 200) {
-				const summary = res.data.summary_do;
+				const payload = {
+					filter: {
+						order_status: [status],
+						origin_code,
+						destination_code,
+					},
+					keyword,
+					page,
+				};
 
-				const updatedMenus = menus.map((menu) => {
-					const found = summary.find((s) => s.status === menu.order_status);
-					return {
-						...menu,
-						count: found ? found.total : 0,
-					};
-				});
+				const res = await fetchApi.post("/orders", payload);
 
-				setMenus(updatedMenus);
-				setOrder(res.data.order_list);
+				if (res.status === 200) {
+					const summary = res.data.summary_do;
+
+					const updatedMenus = menus.map((menu) => {
+						const found = summary.find((s) => s.status === menu.order_status);
+						return {
+							...menu,
+							count: found ? found.total : 0,
+						};
+					});
+
+					setMenus(updatedMenus);
+					setOrder(res.data.order_list);
+				}
+			} catch (error) {
+				console.error("Error fetching DOs:", error);
+			} finally {
+				setFilter((prev) => ({
+					...prev,
+					isLoading: false,
+				}));
 			}
-		} catch (error) {
-			console.error("Error fetching DOs:", error);
-		} finally {
-			setLoading(false);
-		}
-	};
+		},
+		[filter, menus, setOrder]
+	);
 
-	useEffect(() => {
-		getDatas(activeTab);
+	// Handle tab changes
+	const handleTabChange = async (status) => {
+		await setFilter({
+			activeTab: status,
+			search: "",
+			origin: [],
+			destination: [],
+			page: 1,
+		});
+
+		getDatas(status, "", [], [], 1);
 
 		document
 			.getElementById("table-wrapper")
 			?.scrollTo({ top: 0, behavior: "smooth" });
-	}, [activeTab]);
+	};
+
+	// Handle search input changes
+	const handleSearchChange = (e) => {
+		const newSearchValue = e.target.value;
+		setFilter((prev) => ({
+			...prev,
+			search: newSearchValue,
+		}));
+
+		getDatas(filter.activeTab, newSearchValue);
+	};
+
+	useEffect(() => {
+		getDatas();
+	}, []);
 
 	return (
 		<>
@@ -78,12 +119,12 @@ const Filter = () => {
 			<div className="relative">
 				<div className="w-full h-20 flex justify-around items-center border-b bg-white z-50">
 					{menus.map((val, index) => {
-						const isActive = activeTab === val.order_status;
+						const isActive = filter.activeTab === val.order_status;
 
 						return (
 							<div
 								key={index}
-								onClick={() => setActiveTab(val.order_status)}
+								onClick={() => handleTabChange(val.order_status)}
 								className={`px-4 py-2 flex items-center gap-2 rounded-md cursor-pointer transition-all ${
 									isActive
 										? "bg-green-100 text-green-700 font-semibold"
@@ -106,10 +147,8 @@ const Filter = () => {
 						hasIconLeft={<MdSearch />}
 						width="w-[400px]"
 						debounceTime={1000}
-						// value={search}
-						// onChange={(e) => {
-						// setSearch(e.target.value);
-						// }}
+						value={filter.search}
+						onChange={handleSearchChange}
 					/>
 					<Button size="small" onClick={() => setOpenModal(true)}>
 						Filter

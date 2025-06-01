@@ -50,21 +50,24 @@ const TextInput = ({
 		};
 	}, []);
 
-	const debounce = (e) => {
-		if (timerRef.current) {
-			clearTimeout(timerRef.current);
-		}
-		timerRef.current = setTimeout(() => {
-			setValue(e.target.value);
-			onChange(e);
-		}, debounceTime);
-	};
-
 	const handleChange = (e) => {
+		const newValue = e.target.value;
+		setValue(newValue); // Always update UI immediately
+
 		if (debounceTime) {
-			debounce(e);
+			if (timerRef.current) {
+				clearTimeout(timerRef.current);
+			}
+
+			timerRef.current = setTimeout(() => {
+				// Clone the event to avoid React's synthetic event pooling
+				const clonedEvent = {
+					...e,
+					target: { ...e.target, value: newValue },
+				};
+				onChange(clonedEvent);
+			}, debounceTime);
 		} else {
-			setValue(e.target.value);
 			onChange(e);
 		}
 	};
