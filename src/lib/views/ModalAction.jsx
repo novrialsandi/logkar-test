@@ -3,7 +3,7 @@ import Modal from "../components/Modal";
 import Dropdown from "../components/Dropdown";
 import Button from "../components/Button";
 import { useFilterStore } from "../stores";
-import { destionationOptions, originOptions } from "../const/tableColumns";
+import { destionationOptions, originOptions } from "../const";
 
 const ModalAction = ({ openModal, setOpenModal, getDatas }) => {
 	const [activeTab, setActiveTab] = useState("origin");

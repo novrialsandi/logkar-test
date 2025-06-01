@@ -7,7 +7,7 @@ import { MdMoreVert } from "react-icons/md";
 import Tippy from "@tippyjs/react";
 import { useState, useRef, useEffect } from "react";
 import "tippy.js/dist/tippy.css";
-import { columns } from "../const/tableColumns";
+import { columns } from "../const";
 import "tippy.js/themes/light.css";
 
 const DosComponent = () => {

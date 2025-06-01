@@ -15,7 +15,7 @@ import {
 } from "react-icons/md";
 import Button from "../components/Button";
 import ModalAction from "./ModalAction";
-import { destionationOptions, originOptions } from "../const/tableColumns";
+import { destionationOptions, originOptions } from "../const";
 
 const Filter = () => {
 	const { order, setOrder } = useOrderStore();
