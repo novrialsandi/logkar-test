@@ -15,3 +15,19 @@ export const columns = [
 	{ label: "Updated Date", key: "updated_at" },
 	{ label: "", key: "" },
 ];
+
+export const originOptions = [
+	{ label: "BANDUNG", value: "BDG" },
+	{ label: "JAKARTA", value: "JKT" },
+	{ label: "SURABAYA", value: "SBY" },
+	{ label: "DENPASAR", value: "DPS" },
+	{ label: "MALANG", value: "MLG" },
+];
+
+export const destionationOptions = [
+	{ label: "MEDAN", value: "MDN" },
+	{ label: "BANJARMASIN", value: "BJM" },
+	{ label: "PEKANBARU", value: "PKU" },
+	{ label: "PALEMBANG", value: "PLB" },
+	{ label: "BALIKPAPAN", value: "BPN" },
+];

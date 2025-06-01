@@ -141,19 +141,24 @@ const Dropdown = ({
 						className={`${
 							!singleSelectedItem &&
 							!multipleSelectedItems.length &&
-							!defaultValue
+							!(Array.isArray(defaultValue)
+								? defaultValue.length > 0
+								: defaultValue)
 								? "text-gray-400"
 								: "text-gray-700"
 						}`}
 					>
-						{!singleSelectedItem && !multipleSelectedItems.length
-							? defaultValue
-								? defaultValue
-								: placeholder
+						{!singleSelectedItem &&
+						!multipleSelectedItems.length &&
+						!(Array.isArray(defaultValue)
+							? defaultValue.length > 0
+							: defaultValue)
+							? placeholder
 							: type === "single"
 							? singleSelectedItem
 							: `${multipleSelectedItems.length} Selected`}
 					</span>
+
 					<span
 						style={{
 							transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",

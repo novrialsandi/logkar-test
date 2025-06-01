@@ -160,7 +160,11 @@ const Filter = () => {
 
 	return (
 		<>
-			<ModalAction openModal={openModal} setOpenModal={setOpenModal} />
+			<ModalAction
+				openModal={openModal}
+				setOpenModal={setOpenModal}
+				getDatas={getDatas}
+			/>
 			<div className="relative">
 				<div className="w-full h-20 flex justify-around items-center border-b bg-white z-50">
 					{menus.map((val, index) => {

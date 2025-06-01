@@ -7,7 +7,7 @@ import { MdMoreVert } from "react-icons/md";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // Optional: default styling
 import { useState } from "react";
-import { columns } from "../constant/tableColumns";
+import { columns } from "../const/tableColumns";
 
 const DosComponent = () => {
 	const { order } = useOrderStore();
