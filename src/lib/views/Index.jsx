@@ -3,12 +3,15 @@
 import { useOrderStore, useLoadingStore } from "../stores";
 import moment from "moment";
 import Filter from "./Filter";
+import { MdMoreVert } from "react-icons/md";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // Optional: default styling
+import { useState } from "react";
 
 const DosComponent = () => {
 	const { order } = useOrderStore();
 	const { loading } = useLoadingStore();
+	const [activeMenuRowIndex, setActiveMenuRowIndex] = useState(null);
 
 	const columns = [
 		{ label: "Do/No", key: "do_no" },
@@ -25,7 +28,7 @@ const DosComponent = () => {
 		{ label: "Status", key: "status" },
 		{ label: "Referensi", key: "ref_no" },
 		{ label: "Updated Date", key: "updated_at" },
-		// { label: "", key: "" },
+		{ label: "", key: "" },
 	];
 
 	return (
@@ -64,17 +67,57 @@ const DosComponent = () => {
 												key={col.key}
 												className="p-2 border text-ellipsis text-nowrap py-4 border-[#cccccc] text-center max-w-[200px] overflow-hidden"
 											>
+												{/* Tippy untuk tooltip umum */}
 												<Tippy
 													content={
 														col.key === "updated_at"
 															? moment(item[col.key]).format("YYYY-MM-DD HH:mm")
+															: col.key === ""
+															? "Kelola"
 															: item[col.key] ?? "-"
 													}
+													disabled={col.key === ""}
 												>
 													<span>
-														{col.key === "updated_at"
-															? moment(item[col.key]).format("YYYY-MM-DD HH:mm")
-															: item[col.key] ?? "-"}
+														{col.key === "updated_at" ? (
+															moment(item[col.key]).format("YYYY-MM-DD HH:mm")
+														) : col.key === "" ? (
+															<Tippy
+																visible={activeMenuRowIndex === rowIndex}
+																interactive={true}
+																placement="bottom-end"
+																onClickOutside={() =>
+																	setActiveMenuRowIndex(null)
+																}
+																content={
+																	<div className="bg-white rounded-sm text-sm text-left">
+																		<button
+																			onClick={() => {
+																				setActiveMenuRowIndex(null);
+																			}}
+																			className="block w-full px-4 py-2 rounded-sm hover:bg-red-100 text-red-600"
+																		>
+																			Hapus
+																		</button>
+																	</div>
+																}
+															>
+																<button
+																	className="cursor-pointer"
+																	onClick={() =>
+																		setActiveMenuRowIndex(
+																			activeMenuRowIndex === rowIndex
+																				? null
+																				: rowIndex
+																		)
+																	}
+																>
+																	<MdMoreVert size={24} />
+																</button>
+															</Tippy>
+														) : (
+															item[col.key] ?? "-"
+														)}
 													</span>
 												</Tippy>
 											</td>
