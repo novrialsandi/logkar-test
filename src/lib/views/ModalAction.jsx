@@ -53,7 +53,16 @@ const ModalAction = ({ openModal, setOpenModal, getDatas }) => {
 	}, [filter.activeTab]);
 
 	return (
-		<Modal visible={openModal} onClose={() => setOpenModal(false)}>
+		<Modal
+			visible={openModal}
+			onClose={() => {
+				setOpenModal(false);
+				setTemp({
+					originTemporary: filter.origin,
+					destinationTemporary: filter.destination,
+				});
+			}}
+		>
 			<div className="p-4 min-h-[500px] h-full flex flex-col justify-between">
 				<div className="flex flex-col gap-4">
 					{/* Tabs */}
